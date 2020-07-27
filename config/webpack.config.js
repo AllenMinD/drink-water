@@ -24,6 +24,7 @@ const getClientEnvironment = require('./env');
 const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
 const ForkTsCheckerWebpackPlugin = require('react-dev-utils/ForkTsCheckerWebpackPlugin');
 const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
+const crypto = require('crypto');
 
 const postcssNormalize = require('postcss-normalize');
 
@@ -52,6 +53,17 @@ const sassModuleRegex = /\.module\.(scss|sass)$/;
 // 添加 less 解析规则
 const lessRegex = /\.less$/;
 const lessModuleRegex = /\.module\.less$/;
+
+const generateHashedClass = (name, filePath) => {
+    let curPathLength = process.cwd().length;
+    let sign = crypto
+        .createHash('md5')
+        .update(filePath.substr(curPathLength))
+        .digest('hex')
+        .toUpperCase();
+    return path.basename(filePath, path.extname(filePath)) + '_' + name + '_' + sign.slice(0, 6);
+}
+
 
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
@@ -389,6 +401,19 @@ module.exports = function (webpackEnv) {
                                             },
                                         },
                                     ],
+                                    [
+                                        'react-css-modules',
+                                        {
+                                            context: path.join(__dirname, '..'),
+                                            exclude: 'node_modules',
+                                            filetypes: {
+                                                '.less': {
+                                                    syntax: 'postcss-less'
+                                                }
+                                            },
+                                            generateScopedName: generateHashedClass
+                                        }
+                                    ]
                                 ],
                                 // This is a feature of `babel-loader` for webpack (not Babel itself).
                                 // It enables caching results in ./node_modules/.cache/babel-loader/
@@ -440,7 +465,6 @@ module.exports = function (webpackEnv) {
                             exclude: cssModuleRegex,
                             use: getStyleLoaders({
                                 importLoaders: 1,
-                                modules: true,
                                 sourceMap: isEnvProduction && shouldUseSourceMap,
                             }),
                             // Don't consider CSS imports dead code even if the
@@ -469,7 +493,6 @@ module.exports = function (webpackEnv) {
                             exclude: sassModuleRegex,
                             use: getStyleLoaders({
                                     importLoaders: 3,
-                                    modules: true,
                                     sourceMap: isEnvProduction && shouldUseSourceMap,
                                 },
                                 'sass-loader'
@@ -499,24 +522,23 @@ module.exports = function (webpackEnv) {
                             test: lessRegex,
                             exclude: lessModuleRegex,
                             use: getStyleLoaders({
-                                    importLoaders: 2,
-                                    modules: true,
+                                    importLoaders: 1,
                                     sourceMap: isEnvProduction && shouldUseSourceMap,
+                                    modules: {
+                                        getLocalIdent: (
+                                            context,
+                                            _localIdentName,
+                                            localName
+                                        ) =>
+                                            generateHashedClass(
+                                                localName,
+                                                context.resourcePath
+                                            ),
+                                    },
                                 },
                                 'less-loader'
                             ),
                             sideEffects: true,
-                        },
-                        {
-                            test: lessModuleRegex,
-                            use: getStyleLoaders({
-                                    importLoaders: 2,
-                                    sourceMap: isEnvProduction && shouldUseSourceMap,
-                                    modules: true,
-                                    getLocalIdent: getCSSModuleLocalIdent,
-                                },
-                                'less-loader'
-                            )
                         },
 
                         // "file" loader makes sure those assets get served by WebpackDevServer.
