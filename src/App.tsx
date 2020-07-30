@@ -1,11 +1,40 @@
 import React from 'react';
-import './App.css';
-import UserSetting from './Components/UserSetting';
+import './App.less';
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link
+} from "react-router-dom";
+import HomePage from './pages/HomePage';
+import UserSettingPage from './pages/UserSettingPage';
 
 function App() {
     return (
-        <div className="App">
-            <UserSetting />
+        <div styleName="App">
+            <Router>
+                <div>
+                    <nav>
+                        <ul>
+                            <li>
+                                <Link to="/">Home</Link>
+                            </li>
+                            <li>
+                                <Link to="/setting">Setting</Link>
+                            </li>
+                        </ul>
+                    </nav>
+
+                    <Switch>
+                        <Route exact path="/">
+                            <HomePage/>
+                        </Route>
+                        <Route path="/setting">
+                            <UserSettingPage/>
+                        </Route>
+                    </Switch>
+                </div>
+            </Router>
         </div>
     );
 }
