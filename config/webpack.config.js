@@ -413,6 +413,14 @@ module.exports = function (webpackEnv) {
                                             },
                                             generateScopedName: generateHashedClass
                                         }
+                                    ],
+                                    [
+                                        'import', 
+                                        { 
+                                            libraryName: 'antd',
+                                            libraryDirectory: 'lib',  // libraryDirectory 默认为 lib
+                                            style: 'css' ,
+                                        }
                                     ]
                                 ],
                                 // This is a feature of `babel-loader` for webpack (not Babel itself).
@@ -481,7 +489,15 @@ module.exports = function (webpackEnv) {
                                 importLoaders: 1,
                                 sourceMap: isEnvProduction && shouldUseSourceMap,
                                 modules: {
-                                    getLocalIdent: getCSSModuleLocalIdent,
+                                    getLocalIdent: (
+                                        context,
+                                        _localIdentName,
+                                        localName
+                                    ) =>
+                                        generateHashedClass(
+                                            localName,
+                                            context.resourcePath
+                                        ),
                                 },
                             }),
                         },
