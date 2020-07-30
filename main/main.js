@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const url = require('url');
 
@@ -10,6 +10,7 @@ function createWindow() {
         webPreferences: {
             nodeIntegration: true,
             webSecurity: false,
+            preload: path.join(__dirname, 'preload.js'),
         }
     })
 
@@ -42,3 +43,10 @@ app.on('activate', () => {
         createWindow();
     }
 })
+
+// 监听 greetToMain 事件
+ipcMain.on('greetToMain', (event, arg) => {
+    console.log('来自渲染进程问候', arg);
+    // 回复渲染进程
+    event.reply('greetToRenderer', { greet: 'hello render '});
+});
