@@ -42,7 +42,7 @@ let Home = (props: IProps) => {
             body: '老铁起来喝水啦',
         });
 
-        notify.onclick = () => {
+        notify.onclose = () => {
             onClickIncrease();
         }
     }
