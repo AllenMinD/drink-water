@@ -1,4 +1,5 @@
 import React, { memo } from 'react';
+import Home from '../Components/Home';
 
 //私有常量
 
@@ -18,7 +19,7 @@ let HomePage = (props: IProps) => {
     //组件Effect
 
     return (
-        <div>首页</div>
+        <Home />
     );
 };
 

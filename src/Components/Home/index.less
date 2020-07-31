@@ -1,0 +1,82 @@
+@import '../../variables.less';
+
+.container {
+    display: flex;
+    .left {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: calc(@total-width / 2);
+        height: calc(@total-height - 80px);
+        .title {
+            align-self: flex-start;
+            margin-left: 56px;
+            color: @color-black;
+            font-size: 24px;
+            margin-bottom: 24px;
+        }
+        .pic {
+            width: 400px;
+            height: 400px;
+            margin-bottom: 100px;
+            background-image: url(../../assets/images/undraw_mint_tea_7su0.svg);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+    }
+    .right {
+        width: calc(@total-width / 2);
+        font-size: 18px;
+        margin-top: 60px;
+        
+        .plan {
+            text-align: center;
+        }
+        
+        .count-down {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .progress {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .button-row-1 {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 50px;
+            .gap {
+                width: 24px;
+            }
+            :global {
+                .ant-btn-primary {
+                    background: @color-fountain-blue;
+                    border-color: @color-fountain-blue;
+                    &:hover {
+                        background: #73e0d0;
+                        border-color: #73e0d0;
+                    }
+                }
+                .ant-btn-dangerous {
+                    background: #E43955;
+                    border-color: #E43955;
+                    &:hover {
+                        background: #ea6279;
+                        border-color: #ea6279;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.fountain-blue {
+    color: @color-fountain-blue;
+}
